@@ -1,0 +1,106 @@
+{
+  "switches": {
+    "extron": {
+      "title": "Extron Crosspoint Plus 128HVA with DSVP",
+      "driver": "extron",
+      "config": {
+        "maxInputs": 12,
+        "maxOutputs": 8,
+        "tty": "ttyUSB0"
+      }
+    }
+  },
+  "devices": [
+    {
+      "title": "Nintendo",
+      "image": "./images/nes.png",
+      "ties": {
+        "extron": {
+          "input": 9,
+          "output": {
+            "video": 4,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "Super Nintendo",
+      "image": "./images/snes.png",
+      "ties": {
+        "extron": {
+          "input": 1,
+          "output": {
+            "video": 1,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "Nintendo 64",
+      "image": "./images/n64.png",
+      "ties": {
+        "extron": {
+          "input": 8,
+          "output": {
+            "video": 3,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "Wii",
+      "image": "./images/wii.png",
+      "ties": {
+        "extron": {
+          "input": 5,
+          "output": {
+            "video": 2,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "Playstation 2",
+      "image": "./images/ps2.png",
+      "ties": {
+        "extron": {
+          "input": 2,
+          "output": {
+            "video": 1,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "Playstation 3",
+      "image": "./images/ps3.png",
+      "ties": {
+        "extron": {
+          "input": 6,
+          "output": {
+            "video": 2,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
+      "title": "XBox 360",
+      "image": "./images/xb360.png",
+      "ties": {
+        "extron": {
+          "input": 7,
+          "output": {
+            "video": 2,
+            "audio": 1
+          }
+        }
+      }
+    }
+  ]
+}
