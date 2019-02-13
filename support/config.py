@@ -24,7 +24,8 @@ def load_config() -> Dict[str, Any]:
     # Initialize the configuration paths or path resolution.
     program_path = os.path.abspath(str(main.__file__))
     program_dir  = os.path.dirname(program_path)
-    config_path  = os.path.abspath(os.path.join(program_dir, './config/pigaswi.json'))
+    # noinspection SpellCheckingInspection
+    config_path  = os.path.abspath(os.path.join(program_dir, './config/piavswictrl.json'))
     config_dir   = os.path.dirname(config_path)
 
     # Now load up the configuration data.
