@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=PiAvSwitchController
+Exec=/usr/bin/env python3 <PiAvSwitchController location>/piavswictrl.py
