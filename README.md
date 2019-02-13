@@ -18,8 +18,8 @@ additional library.  You can install it by running
 
 ## Usage and Configuration
 
-See our [Wiki on GitHub](http://www.github.com/) for information on setting up,
-configuring, and using PiAvSwitchController.
+See the [Wiki on GitHub](http://www.github.com/6XGate/PiAvSwitchController/wiki)
+for information on setting up, configuring, and using PiAvSwitchController.
 
 ## Plans
 
@@ -29,4 +29,4 @@ configuring, and using PiAvSwitchController.
 
 ## Change Log
 
-See our [Project on GitHub](http://www.github.com/).
+See the [Project on GitHub](http://www.github.com/6XGate/PiAvSwitchController).
