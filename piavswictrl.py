@@ -8,7 +8,7 @@ from support.Device import load_devices
 from support.config import load_config
 from ui.Main        import Main
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 root = None # type: Main
 
