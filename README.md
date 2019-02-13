@@ -8,12 +8,18 @@ several devices.
 The main goal of this project is to help retro console gamers using older
 professional matrix audio/video switch, such as Extron's Crosspoint series, and
 professional monitors, such as Sony's PVM and BVM series, better select the
-channels to which they have connected their
+channels to which they have connected consoles.
+
+## Installation
+
+Though this is designed for Raspian out of the box, it still requires one
+additional library.  You can install it by running
+`sudo apt install python3-pil.imagetk`
 
 ## Usage and Configuration
 
-See our [Wiki on GitHub](http://www.github.com/) for information on setting up,
-configuring, and using PiAvSwitchController.
+See the [Wiki on GitHub](http://www.github.com/6XGate/PiAvSwitchController/wiki)
+for information on setting up, configuring, and using PiAvSwitchController.
 
 ## Plans
 
@@ -23,4 +29,4 @@ configuring, and using PiAvSwitchController.
 
 ## Change Log
 
-See our [Project on GitHub](http://www.github.com/).
+See the [Project on GitHub](http://www.github.com/6XGate/PiAvSwitchController).
