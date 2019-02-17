@@ -1,12 +1,19 @@
 {
   "switches": {
+    "bvm": {
+      "title": "Sony BVM-D24E1WU",
+      "driver": "sony-bvm-d",
+      "config": {
+        "tty": "ttyUSB0"
+      }
+    },
     "extron": {
       "title": "Extron Crosspoint Plus 128HVA with DSVP",
       "driver": "extron",
       "config": {
         "maxInputs": 12,
         "maxOutputs": 8,
-        "tty": "ttyUSB0"
+        "tty": "ttyUSB1"
       }
     }
   },
@@ -15,6 +22,9 @@
       "title": "Nintendo",
       "image": "./images/nes.png",
       "ties": {
+        "bvm": {
+          "input": 4
+        },
         "extron": {
           "input": 9,
           "output": {
@@ -28,6 +38,9 @@
       "title": "Super Nintendo",
       "image": "./images/snes.png",
       "ties": {
+        "bvm": {
+          "input": 1
+        },
         "extron": {
           "input": 1,
           "output": {
@@ -41,6 +54,9 @@
       "title": "Nintendo 64",
       "image": "./images/n64.png",
       "ties": {
+        "bvm": {
+          "input": 3
+        },
         "extron": {
           "input": 8,
           "output": {
@@ -51,9 +67,28 @@
       }
     },
     {
+      "title": "GameCube",
+      "image": "./images/gcn.png",
+      "ties": {
+        "bvm": {
+          "input": 5
+        },
+        "extron": {
+          "input": 5,
+          "output": {
+            "video": 5,
+            "audio": 1
+          }
+        }
+      }
+    },
+    {
       "title": "Wii",
       "image": "./images/wii.png",
       "ties": {
+        "bvm": {
+          "input": 2
+        },
         "extron": {
           "input": 5,
           "output": {
@@ -67,6 +102,9 @@
       "title": "Playstation 2",
       "image": "./images/ps2.png",
       "ties": {
+        "bvm": {
+          "input": 1
+        },
         "extron": {
           "input": 2,
           "output": {
@@ -80,6 +118,9 @@
       "title": "Playstation 3",
       "image": "./images/ps3.png",
       "ties": {
+        "bvm": {
+          "input": 2
+        },
         "extron": {
           "input": 6,
           "output": {
@@ -93,6 +134,9 @@
       "title": "XBox 360",
       "image": "./images/xb360.png",
       "ties": {
+        "bvm": {
+          "input": 2
+        },
         "extron": {
           "input": 7,
           "output": {
@@ -102,5 +146,5 @@
         }
       }
     }
-  ],
+  ]
 }

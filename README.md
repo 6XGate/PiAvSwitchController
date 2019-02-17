@@ -30,3 +30,17 @@ for information on setting up, configuring, and using PiAvSwitchController.
 ## Change Log
 
 See the [Project on GitHub](http://www.github.com/6XGate/PiAvSwitchController).
+
+## Example Images
+
+The example images where taken from Wikipedia pages for each console and the
+trademarks and art belongs to their respective companies, no new license is
+implied by their presence in this code-base.  Their inclusion is simply an
+educational example presumed under fair use.  
+
+## Interface Icons
+
+Icons not defined by the configuration have the following license:
+
+- _ui/res/poweroff.png_, CC BY-SA 3.0, canvas enlarged to 128x128,
+  [Source](https://upload.wikimedia.org/wikipedia/commons/7/72/Power_off_icon.png)
