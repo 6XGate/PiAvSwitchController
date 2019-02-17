@@ -1,5 +1,6 @@
 import os
 import functools
+import dbus
 import tkinter as tk
 from typing import List, Dict, Union, Callable
 from PIL import Image, ImageEnhance, ImageTk
@@ -12,6 +13,11 @@ class Colors:
     FRAME = "Black"
     BUTTON_NORMAL = "Dark Grey"
     BUTTON_SELECTED = "White"
+
+
+def shutdown_system():
+    # noinspection SpellCheckingInspection
+    os.system('sudo poweroff')
 
 
 class Main(tk.Tk):
@@ -60,6 +66,7 @@ class Main(tk.Tk):
         def power_off():
             for name, switch in switches.items():
                 switch.power_off()
+            shutdown_system()
 
         power_off_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), './res/poweroff.png'))
         button = self.__make_button(power_off, Image.open(power_off_image_path))
