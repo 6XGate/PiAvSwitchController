@@ -24,3 +24,7 @@ class Driver:
         :param audio_output_channel: The output audio channel of the tie.
         """
         pass
+
+    def power_off(self) -> None:
+        """Powers off the switch or monitor."""
+        pass

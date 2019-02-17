@@ -42,6 +42,10 @@ class SonyBvmDSeries(Driver):
 
         self.__set_channel(input_channel)
 
+    def power_off(self) -> None:
+        """Powers off the monitor."""
+        self.__power_off()
+
     def __set_channel(self, channel: int) -> None:
         """
         Sends a set channel command to the monitor.
@@ -52,6 +56,17 @@ class SonyBvmDSeries(Driver):
 
         # Not sure why, but all channel sets have 1 as their first argument.
         command = CommandBlock(destination, source, Command.SET_CHANNEL, 1, channel)
+        packet = command.package()
+
+        packet.write(self.serial)
+
+    def __power_off(self) -> None:
+        """Powers off the monitor."""
+        source = Address(AddressKind.ALL, 0)
+        destination = Address(AddressKind.ALL, 0)
+
+        # Not sure why, but all channel sets have 1 as their first argument.
+        command = CommandBlock(destination, source, Command.POWER_OFF)
         packet = command.package()
 
         packet.write(self.serial)

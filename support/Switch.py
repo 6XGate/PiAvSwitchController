@@ -29,6 +29,10 @@ class Switch:
         """
         self.driver.set_tie(input_channel, video_output_channel, audio_output_channel)
 
+    def power_off(self) -> None:
+        """Powers off the switch or monitor."""
+        self.driver.power_off()
+
 
 # The loaded switches.
 switches = {}  # type: Dict[str, Switch]

@@ -1,9 +1,11 @@
+import os
 import functools
 import tkinter as tk
-
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Callable
 from PIL import Image, ImageEnhance, ImageTk
+import numpy as np
 from support.Device import devices, Device
+from support.Switch import switches
 
 
 class Colors:
@@ -35,36 +37,18 @@ class Main(tk.Tk):
 
         column = 0
         row = 0
+
+        def selector(target: Device):
+            target.select()
+
         for device in devices:
-            # Create the button.
-            # noinspection SpellCheckingInspection
-            button_config = {
-                'borderwidth': 0,
-                'highlightthickness': 0,
-                'activebackground': Colors.BUTTON_NORMAL,
-                'background': Colors.BUTTON_NORMAL
-            }
-            if len(device.image) > 0:
-                # Get the selected image.
-                selected = ImageTk.PhotoImage(Image.open(device.image))
-                # Generate the normal image.
-                enhancer = ImageEnhance.Brightness(Image.open(device.image))
-                normal = ImageTk.PhotoImage(enhancer.enhance(0.66))
+            # Create the command callback partial.
+            command = functools.partial(selector, device)  # type: Callable[[], None]
 
-                button = tk.Button(self.__frame, image=normal, **button_config)
-                self.__selected_images[button] = selected
-                self.__normal_images[button] = normal
-            else:
-                text = device.title
-                button = tk.Button(self.__frame, text=text, **button_config)
-
-            # Generate a partial to bind the command to the device.
-            command = functools.partial(self.__select_device, button, device)
-
-            # Add the new button.
-            button.config(command=command)
+            button = self.__make_button(command, device)
             button.grid(column=column, row=row, sticky=(tk.N, tk.W))
             button.grid_configure(padx=1, pady=1)
+
             self.__buttons.append(button)
 
             # Move the column and row positions as necessary.
@@ -73,14 +57,24 @@ class Main(tk.Tk):
                 row = row + 1
                 column = 0
 
-    def __select_device(self, button: tk.Button, device: Device):
+        def power_off():
+            for name, switch in switches.items():
+                switch.power_off()
+
+        power_off_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), './res/poweroff.png'))
+        button = self.__make_button(power_off, Image.open(power_off_image_path))
+        button.grid(column=column, row=row, sticky=(tk.N, tk.W))
+        button.grid_configure(padx=1, pady=1)
+        self.__buttons.append(button)
+
+    def __activate_button(self, command: Callable[[], None], button: tk.Button):
         selected = self.__selected
         if selected:
             selected.config(activebackground=Colors.BUTTON_NORMAL, background=Colors.BUTTON_NORMAL)
             if selected in self.__normal_images:
                 selected.config(image=self.__normal_images[selected])
 
-        device.select()
+        command()
         self.__selected = button
         button.config(activebackground=Colors.BUTTON_SELECTED, background=Colors.BUTTON_SELECTED)
         if button in self.__selected_images:
@@ -88,3 +82,50 @@ class Main(tk.Tk):
 
     def __idle_poll(self) -> None:
         self.after(500, self.__idle_poll)
+
+    def __make_button(self, command: Callable[[tk.Button], None], target: Union[None, Device, Image.Image]) -> tk.Button:
+            # noinspection SpellCheckingInspection
+            button_config = {
+                'borderwidth': 0,
+                'highlightthickness': 0,
+                'activebackground': Colors.BUTTON_NORMAL,
+                'background': Colors.BUTTON_NORMAL
+            }
+
+            if isinstance(target, Device):
+                # Device button
+                device = target
+                if len(device.image) > 0:
+                    # Get the selected image.
+                    selected = ImageTk.PhotoImage(Image.open(device.image))
+                    # Generate the normal image.
+                    enhancer = ImageEnhance.Brightness(Image.open(device.image))
+                    normal = ImageTk.PhotoImage(enhancer.enhance(0.66))
+
+                    button = tk.Button(self.__frame, image=normal, **button_config)
+                    self.__selected_images[button] = selected
+                    self.__normal_images[button] = normal
+                else:
+                    text = device.title
+                    button = tk.Button(self.__frame, text=text, **button_config)
+
+                # Generate a partial to bind the button and command to __activate_button.
+                bound_command = functools.partial(self.__activate_button, command, button)  # type: Callable[[], None]
+                button.config(command=bound_command)
+                return button
+            elif isinstance(target, Image.Image):
+                # Special button
+                # Get the selected image.
+                selected = ImageTk.PhotoImage(target)
+                # Generate the normal image.
+                enhancer = ImageEnhance.Brightness(Image.fromarray(np.asarray(target)))
+                normal = ImageTk.PhotoImage(enhancer.enhance(0.66))
+
+                button = tk.Button(self.__frame, image=normal, **button_config)
+                self.__selected_images[button] = selected
+                self.__normal_images[button] = normal
+
+                # Generate a partial to bind the button and command to __activate_button.
+                bound_command = functools.partial(self.__activate_button, command, button)  # type: Callable[[], None]
+                button.config(command=bound_command)
+                return button

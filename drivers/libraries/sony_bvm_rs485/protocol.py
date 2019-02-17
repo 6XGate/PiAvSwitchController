@@ -158,6 +158,7 @@ class Command(IntEnum):
 
     SET_CHANNEL = 0x2100  # Sets the channel
     POWER_ON = 0x293E     # Powers on the monitor
+    POWER_OFF = 0x2A3E    # Powers off the monitor
     BUTTON = 0x3F44       # Emits a control module button
 
 
