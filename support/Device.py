@@ -1,26 +1,29 @@
-from typing             import Dict, Any, Union, List
-from support.Tie        import Tie
-from support.config     import get_config_path
-from support.validation import validate_arg
+from typing import Dict, Any, Union, List
+from .Tie import Tie
+from .config import get_config_path
+from .validation import validate_arg
 
 # A tie channel may be a single channel for input and output, or a video and audio channel for output.
 TieChannel = Union[int, Dict[str, int]]
-TieConfig  = Dict[str, TieChannel]
+TieConfig = Dict[str, TieChannel]
+
 
 class Device:
+    """Represents an input device."""
+
     def __init__(self, device_index: int, config: dict):
         """
         Initializes a new instance of the Device class.
         :param device_index: The device index for error reporting.
         :param config:       The device configuration such as channel ties.
         """
-        validate_arg('ties' in config,                 "Configuration for `{0}` missing `ties`".format(device_index))
+        validate_arg('ties' in config, "Configuration for `{0}` missing `ties`".format(device_index))
         validate_arg(isinstance(config['ties'], dict), "Ties for `{0}` is not an object".format(device_index))
 
-        self.id    = device_index
+        self.id = device_index
         self.title = str(config['title'] if 'title' in config else device_index)
         self.image = str(get_config_path(config['image']) if 'image' in config else '')
-        self.ties  = [] # type: List[Tie]
+        self.ties = []  # type: List[Tie]
 
         self.__load_tie(config['ties'])
 
@@ -37,8 +40,10 @@ class Device:
         for switch_id, tie_config in switch_ties.items():
             self.ties.append(Tie(switch_id, tie_config))
 
+
 # The loaded devices.
-devices = [] # type: List[Device]
+devices = []  # type: List[Device]
+
 
 def load_devices(config: List[Dict[str, Any]]) -> None:
     """
