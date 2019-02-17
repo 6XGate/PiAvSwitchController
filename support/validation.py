@@ -1,5 +1,6 @@
 from typing import Callable
 
+
 def validate_arg(expr: bool, msg: str) -> None:
     """
     Validates an argument.
@@ -9,6 +10,7 @@ def validate_arg(expr: bool, msg: str) -> None:
     """
     if not expr:
         raise ValueError(msg)
+
 
 def validate_data(expr: bool, error: Callable[[], Exception]) -> None:
     """

@@ -1,14 +1,11 @@
 from typing import Dict, Any
 
+
 class Driver:
     """Represents the traits and functionality of a switch driver."""
 
-    # The switch may change the aspect ratio of the video output.
-    HAS_MULTIPLE_ASPECT_RATIOS = 1 << 0
-    # The switch has multiple outputs.
-    HAS_MULTIPLE_OUTPUTS       = 1 << 1
-    # The switch can have separate output channels for audio and video.
-    CAN_DECOUPLE_AUDIO_OUTPUT  = 1 << 2
+    HAS_MULTIPLE_OUTPUTS = 1 << 0       # The switch has multiple outputs.
+    CAN_DECOUPLE_AUDIO_OUTPUT = 1 << 1  # The switch can have separate output channels for audio and video.
 
     def __init__(self, config: Dict[str, Any], capabilities: int):
         """
@@ -16,7 +13,7 @@ class Driver:
         :param config:       The device configuration for the driver.
         :param capabilities: The capabilities of the driver.
         """
-        self.config       = config
+        self.config = config
         self.capabilities = capabilities
 
     def set_tie(self, input_channel: int, video_output_channel: int, audio_output_channel: int) -> None:

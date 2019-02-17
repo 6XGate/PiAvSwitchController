@@ -1,6 +1,7 @@
-from typing             import Dict, Any
+from typing import Dict, Any
 from support.validation import validate_arg
-from drivers            import load_driver
+from drivers import load_driver
+
 
 class Switch:
     """Represents a switching device."""
@@ -11,12 +12,12 @@ class Switch:
         :param switch_id: The identifier used when referencing the switch.
         :param config:    The device configuration.
         """
+        validate_arg(len(switch_id) > 0, 'Switch ID cannot be empty')
+        validate_arg(isinstance(config['config'], dict),
+                     "Configuration block for `{0}` is not an object".format(switch_id))
 
-        validate_arg(len(switch_id) > 0,                 'Switch ID cannot be empty')
-        validate_arg(isinstance(config['config'], dict), "Configuration block for `{0}` is not an object".format(switch_id))
-
-        self.id     = switch_id
-        self.title  = str(config['title'] if 'title' in config else switch_id)
+        self.id = switch_id
+        self.title = str(config['title'] if 'title' in config else switch_id)
         self.driver = load_driver(switch_id, config)
 
     def set_tie(self, input_channel: int, video_output_channel: int, audio_output_channel: int) -> None:
@@ -28,14 +29,15 @@ class Switch:
         """
         self.driver.set_tie(input_channel, video_output_channel, audio_output_channel)
 
+
 # The loaded switches.
-switches = {} # type: Dict[str, Switch]
+switches = {}  # type: Dict[str, Switch]
+
 
 def load_switches(config: Dict[str, Dict[str, Any]]) -> None:
     """
     Loads all the switches from the configuration.
     :param config: The switch section of the configuration data.
     """
-
     for switch_id, switch_config in config.items():
         switches[switch_id] = Switch(switch_id, switch_config)

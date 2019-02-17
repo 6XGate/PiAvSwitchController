@@ -1,7 +1,9 @@
-from typing             import Dict, Any
-from serial             import Serial
-from support            import Driver
+import os
+from typing import Dict, Any
+from serial import Serial
+from support import Driver
 from support.validation import validate_arg
+
 
 class Extron(Driver):
     """Extron SIS Driver for Extron matrix switches using RS-232 mode."""
@@ -14,17 +16,18 @@ class Extron(Driver):
         Initializes a new instances of the Extron driver.
         :param config: The configuration data from the configuration about the device.
         """
-
         super().__init__(config, Driver.CAN_DECOUPLE_AUDIO_OUTPUT)
 
-        validate_arg('maxInputs'  in self.config, 'Missing `maxInputs` for Extron switch')
+        validate_arg('maxInputs' in self.config, 'Missing `maxInputs` for Extron switch')
         validate_arg('maxOutputs' in self.config, 'Missing `maxOutputs` for Extron switch')
-        validate_arg('tty'        in self.config, 'Missing `tty` for Extron switch')
+        validate_arg('tty' in self.config, 'Missing `tty` for Extron switch')
 
-        self.max_inputs  = int(self.config['maxInputs'])
+        tty_path = os.path.realpath("/dev/{}".format(self.config['tty']))
+
+        self.max_inputs = int(self.config['maxInputs'])
         self.max_outputs = int(self.config['maxOutputs'])
-        self.tty         = str(config['tty'])
-        self.serial      = Serial("/dev/{}".format(self.tty))
+        self.tty = tty_path
+        self.serial = Serial(tty_path)
 
         if self.max_outputs > 1:
             self.capabilities = int(self.capabilities | Driver.HAS_MULTIPLE_OUTPUTS)
@@ -41,7 +44,7 @@ class Extron(Driver):
         :param video_output_channel: The output video channel of the tie.
         :param audio_output_channel: The output audio channel of the tie.
         """
-        validate_arg(1 <= input_channel <= self.max_inputs,         'Input channel is out of range')
+        validate_arg(1 <= input_channel <= self.max_inputs, 'Input channel is out of range')
         validate_arg(1 <= video_output_channel <= self.max_outputs, 'Video output channel is out of range')
         validate_arg(1 <= audio_output_channel <= self.max_outputs, 'Audio output channel is out of range')
 

@@ -1,14 +1,16 @@
 import functools
 import tkinter as tk
 
-from typing         import List, Dict, Union
-from PIL            import Image, ImageEnhance, ImageTk
+from typing import List, Dict, Union
+from PIL import Image, ImageEnhance, ImageTk
 from support.Device import devices, Device
 
+
 class Colors:
-    FRAME           = "Black"
-    BUTTON_NORMAL   = "Dark Grey"
+    FRAME = "Black"
+    BUTTON_NORMAL = "Dark Grey"
     BUTTON_SELECTED = "White"
+
 
 class Main(tk.Tk):
 
@@ -17,11 +19,11 @@ class Main(tk.Tk):
         self.after_idle(self.__idle_poll)
         self.title('Pi Game Switch')
         self.attributes('-fullscreen', True)
-        self.__normal_images   = {} # type: Dict[tk.Button, tk.PhotoImage]
-        self.__selected_images = {} # type: Dict[tk.Button, tk.PhotoImage]
-        self.__buttons         = [] # type: List[tk.Button]
-        self.__frame           = tk.Frame(self, cursor='none', background=Colors.FRAME)
-        self.__selected        = None # type: Union[None, tk.Button]
+        self.__normal_images = {}  # type: Dict[tk.Button, tk.PhotoImage]
+        self.__selected_images = {}  # type: Dict[tk.Button, tk.PhotoImage]
+        self.__buttons = []  # type: List[tk.Button]
+        self.__frame = tk.Frame(self, cursor='none', background=Colors.FRAME)
+        self.__selected = None  # type: Union[None, tk.Button]
 
         # Configure the layout
         self.__frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
@@ -32,28 +34,28 @@ class Main(tk.Tk):
         columns = int(self.winfo_screenwidth() / 130)
 
         column = 0
-        row    = 0
+        row = 0
         for device in devices:
             # Create the button.
             # noinspection SpellCheckingInspection
             button_config = {
-                'borderwidth':         0,
-                'highlightthickness':  0,
-                'activebackground':    Colors.BUTTON_NORMAL,
-                'background':          Colors.BUTTON_NORMAL
+                'borderwidth': 0,
+                'highlightthickness': 0,
+                'activebackground': Colors.BUTTON_NORMAL,
+                'background': Colors.BUTTON_NORMAL
             }
             if len(device.image) > 0:
                 # Get the selected image.
                 selected = ImageTk.PhotoImage(Image.open(device.image))
                 # Generate the normal image.
                 enhancer = ImageEnhance.Brightness(Image.open(device.image))
-                normal   = ImageTk.PhotoImage(enhancer.enhance(0.66))
+                normal = ImageTk.PhotoImage(enhancer.enhance(0.66))
 
                 button = tk.Button(self.__frame, image=normal, **button_config)
                 self.__selected_images[button] = selected
-                self.__normal_images[button]   = normal
+                self.__normal_images[button] = normal
             else:
-                text   = device.title
+                text = device.title
                 button = tk.Button(self.__frame, text=text, **button_config)
 
             # Generate a partial to bind the command to the device.
@@ -68,7 +70,7 @@ class Main(tk.Tk):
             # Move the column and row positions as necessary.
             column = column + 1
             if column == columns:
-                row    = row + 1
+                row = row + 1
                 column = 0
 
     def __select_device(self, button: tk.Button, device: Device):
