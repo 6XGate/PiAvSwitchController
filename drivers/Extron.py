@@ -1,6 +1,8 @@
-import os
 from typing import Dict, Any
+import os
+
 from serial import Serial
+
 from support import Driver
 from support.validation import validate_arg
 

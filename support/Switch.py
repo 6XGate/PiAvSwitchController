@@ -1,5 +1,6 @@
 from typing import Dict, Any
-from support.validation import validate_arg
+
+from .validation import validate_arg
 from drivers import load_driver
 
 
@@ -28,6 +29,10 @@ class Switch:
         :param audio_output_channel: The output audio channel of the tie.
         """
         self.driver.set_tie(input_channel, video_output_channel, audio_output_channel)
+
+    def power_on(self) -> None:
+        """Powers on the switch or monitor."""
+        self.driver.power_on()
 
     def power_off(self) -> None:
         """Powers off the switch or monitor."""

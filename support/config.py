@@ -1,8 +1,9 @@
-# noinspection PyUnresolvedReferences
-import __main__ as main
+from typing import Dict, Any
 import os
 import json
-from typing import Dict, Any
+
+# noinspection PyUnresolvedReferences
+import __main__ as main
 from .validation import validate_data
 
 # The path to the main program.

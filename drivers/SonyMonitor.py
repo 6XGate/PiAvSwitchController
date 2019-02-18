@@ -1,10 +1,12 @@
-import os
-import serial
 from typing import Dict, Any
+import os
+
+import serial
 from serial import Serial
+
 from support import Driver
 from support.validation import validate_arg
-from drivers.libraries.sony_bvm_rs485.protocol import AddressKind, Address, Command, CommandBlock
+from .libraries.sony_bvm_rs485.protocol import AddressKind, Address, Command, CommandBlock
 
 
 class SonyBvmDSeries(Driver):
@@ -40,33 +42,28 @@ class SonyBvmDSeries(Driver):
         validate_arg(video_output_channel == 0, 'Video output channel is out of range')
         validate_arg(audio_output_channel == 0, 'Audio output channel is out of range')
 
-        self.__set_channel(input_channel)
+        # Not sure why, but all channel sets have 1 as their first argument.
+        self.__send_command(Command.SET_CHANNEL, 1, input_channel)
+
+    def power_on(self) -> None:
+        """Powers on the monitor."""
+        self.__send_command(Command.POWER_ON)
 
     def power_off(self) -> None:
         """Powers off the monitor."""
-        self.__power_off()
+        self.__send_command(Command.POWER_OFF)
 
-    def __set_channel(self, channel: int) -> None:
+    def __send_command(self, command: Command, arg0: int = -1, arg1: int = -1) -> None:
         """
-        Sends a set channel command to the monitor.
-        :param channel:
+        Sends a command to the monitor.
+        :param command: The command to send.
+        :param arg0:    The first argument of the command.
+        :param arg1:    The second argument of the command.
         """
         source = Address(AddressKind.ALL, 0)
         destination = Address(AddressKind.ALL, 0)
 
-        # Not sure why, but all channel sets have 1 as their first argument.
-        command = CommandBlock(destination, source, Command.SET_CHANNEL, 1, channel)
-        packet = command.package()
-
-        packet.write(self.serial)
-
-    def __power_off(self) -> None:
-        """Powers off the monitor."""
-        source = Address(AddressKind.ALL, 0)
-        destination = Address(AddressKind.ALL, 0)
-
-        # Not sure why, but all channel sets have 1 as their first argument.
-        command = CommandBlock(destination, source, Command.POWER_OFF)
+        command = CommandBlock(destination, source, command, arg0, arg1)
         packet = command.package()
 
         packet.write(self.serial)
