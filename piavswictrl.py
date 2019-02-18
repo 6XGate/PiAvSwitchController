@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import sys
 import signal
+
 from support.Switch import load_switches
 from support.Device import load_devices
 from support.config import load_config
 from ui.Main import Main
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 root = None  # type: Main
 

@@ -1,12 +1,15 @@
+from typing import List, Dict, Union, Callable
 import os
 import functools
-import dbus
+
 import tkinter as tk
-from typing import List, Dict, Union, Callable
-from PIL import Image, ImageEnhance, ImageTk
 import numpy as np
+from PIL import Image, ImageEnhance, ImageTk
+
 from support.Device import devices, Device
 from support.Switch import switches
+
+ButtonTarget = Union[None, Device, Image.Image]
 
 
 class Colors:
@@ -21,6 +24,7 @@ def shutdown_system():
 
 
 class Main(tk.Tk):
+    """The main window."""
 
     def __init__(self):
         super().__init__()
@@ -74,6 +78,12 @@ class Main(tk.Tk):
         button.grid_configure(padx=1, pady=1)
         self.__buttons.append(button)
 
+        def power_on():
+            for name, switch in switches.items():
+                switch.power_on()
+
+        self.after_idle(power_on)
+
     def __activate_button(self, command: Callable[[], None], button: tk.Button):
         selected = self.__selected
         if selected:
@@ -90,7 +100,7 @@ class Main(tk.Tk):
     def __idle_poll(self) -> None:
         self.after(500, self.__idle_poll)
 
-    def __make_button(self, command: Callable[[tk.Button], None], target: Union[None, Device, Image.Image]) -> tk.Button:
+    def __make_button(self, command: Callable[[tk.Button], None], target: ButtonTarget) -> tk.Button:
             # noinspection SpellCheckingInspection
             button_config = {
                 'borderwidth': 0,

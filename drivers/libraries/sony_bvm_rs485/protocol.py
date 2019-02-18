@@ -1,7 +1,9 @@
-import io
 from typing import Union
 from enum import IntEnum
+import io
+
 from serial import Serial
+
 from .errors import *
 
 # Sony BVM D-series RS-485 Serial Protocol (Current Understanding)

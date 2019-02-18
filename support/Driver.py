@@ -25,6 +25,10 @@ class Driver:
         """
         pass
 
+    def power_on(self) -> None:
+        """Power on the switch or monitor."""
+        pass
+
     def power_off(self) -> None:
         """Powers off the switch or monitor."""
         pass
