@@ -1,7 +1,8 @@
 from typing import Dict, Union
-from support.validation import validate_arg
-from support import Switch, Driver
-from support.Switch import switches
+
+from .validation import validate_arg
+from . import Switch, Driver
+from .Switch import switches
 
 # A tie channel may be a single channel for input and output, or a video and audio channel for output.
 TieChannel = Union[int, Dict[str, int]]
