@@ -1,34 +1,50 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 import sys
-import signal
 
-from support.Switch import load_switches
-from support.Device import load_devices
-from support.config import load_config
-from ui.Main import Main
+import dbus
 
-__version__ = "0.4.0"
+from state import State
 
-root = None  # type: Main
+__version__ = "0.5.0"
 
 
-# noinspection PyUnusedLocal
-def on_quit(signum: int, frame) -> None:
-    root.destroy()
+def do_install() -> None:
+    import installer
+
+    installer.install()
 
 
-def main():
-    global root
+def do_setup() -> None:
+    import setup
 
-    config = load_config()
-    load_switches(config['switches'])
-    load_devices(config['devices'])
+    setup.perform()
 
-    signal.signal(signal.SIGTERM, on_quit)
 
-    root = Main()
-    root.mainloop()
-    return 0
+def run_app() -> int:
+    import app
+
+    return app.main()
+
+
+def main() -> int:
+    with State():
+        # Perform any installation tasks that might be required.
+        try:
+            do_install()
+        except dbus.exceptions.DBusException as e:
+            print("Failed to install dependencies: {}".format(e.get_dbus_message()))
+            return 1
+        except Exception as e:
+            print("Failed to install dependencies: {}".format(e))
+            return 1
+
+        try:
+            do_setup()
+        except Exception as e:
+            print(e)
+            return 1
+
+        return run_app()
 
 
 if __name__ == "__main__":
