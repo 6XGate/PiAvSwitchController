@@ -6,8 +6,8 @@ import tkinter as tk
 import numpy as np
 from PIL import Image, ImageEnhance, ImageTk
 
-from support.Device import devices, Device
-from support.Switch import switches
+from ..support.Device import devices, Device
+from ..support.Switch import switches
 
 ButtonTarget = Union[None, Device, Image.Image]
 

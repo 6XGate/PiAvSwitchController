@@ -4,8 +4,8 @@ import os
 import serial
 from serial import Serial
 
-from support import Driver
-from support.validation import validate_arg
+from .. import Driver
+from ..validation import validate_arg
 from .libraries.sony_bvm_rs485.protocol import AddressKind, Address, Command, CommandBlock
 
 
