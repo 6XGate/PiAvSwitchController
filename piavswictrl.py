@@ -12,6 +12,12 @@ def do_install() -> None:
     installer.install()
 
 
+def do_setup() -> None:
+    import setup
+
+    setup.perform()
+
+
 def run_app() -> int:
     import app
 
@@ -27,6 +33,12 @@ def main() -> int:
         return 1
     except Exception as e:
         print("Failed to install dependencies: {}".format(e))
+        return 1
+
+    try:
+        do_setup()
+    except Exception as e:
+        print(e)
         return 1
 
     return run_app()
