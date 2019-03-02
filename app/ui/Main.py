@@ -6,8 +6,8 @@ import tkinter as tk
 import numpy as np
 from PIL import Image, ImageEnhance, ImageTk
 
-from support.Device import devices, Device
-from support.Switch import switches
+from ..support.Device import devices, Device
+from ..support.Switch import switches
 
 ButtonTarget = Union[None, Device, Image.Image]
 
@@ -72,6 +72,7 @@ class Main(tk.Tk):
                 switch.power_off()
             shutdown_system()
 
+        # noinspection SpellCheckingInspection
         power_off_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), './res/poweroff.png'))
         button = self.__make_button(power_off, Image.open(power_off_image_path))
         button.grid(column=column, row=row, sticky=(tk.N, tk.W))
@@ -135,6 +136,7 @@ class Main(tk.Tk):
                 # Get the selected image.
                 selected = ImageTk.PhotoImage(target)
                 # Generate the normal image.
+                # noinspection PyTypeChecker
                 enhancer = ImageEnhance.Brightness(Image.fromarray(np.asarray(target)))
                 normal = ImageTk.PhotoImage(enhancer.enhance(0.66))
 

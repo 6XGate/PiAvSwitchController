@@ -1,7 +1,7 @@
 from typing import Dict, Callable, Any
 
-from support import Driver
-from support.validation import validate_arg
+from .. import Driver
+from ..validation import validate_arg
 from .Extron import Extron
 from .SonyMonitor import SonyBvmDSeries
 

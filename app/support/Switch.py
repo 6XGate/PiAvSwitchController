@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
 from .validation import validate_arg
-from drivers import load_driver
+from .drivers import load_driver
 
 
 class Switch:
