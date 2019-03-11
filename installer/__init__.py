@@ -31,7 +31,7 @@ class _Installer:
         # Connect to the PackageKit session interface.
         bus = dbus.SessionBus()
         self.__name = dbus.service.BusName("org.sleepingscats.PiAvSwitchController", bus)
-        kit = bus.get_object("org.freedesktop.PackageKit", "/org/freedeskt0op/PackageKit")
+        kit = bus.get_object("org.freedesktop.PackageKit", "/org/freedesktop/PackageKit")
 
         # Get the package installation query method.
         query = dbus.Interface(kit, "org.freedesktop.PackageKit.Query")
@@ -63,6 +63,6 @@ def install() -> None:
     log.info("Performing first time or update installation...")
 
     installer = _Installer()
-    if installer.check:
+    if installer.check():
         log.info("Installing required dependencies...")
         installer.install()
