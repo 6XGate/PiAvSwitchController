@@ -4,7 +4,7 @@ import os
 import serial
 from serial import Serial
 
-from .. import Driver
+from .. import Driver, DriverRegistration
 from ..validation import validate_arg
 from .libraries.sony_bvm_rs485.protocol import AddressKind, Address, Command, CommandBlock
 
@@ -15,13 +15,13 @@ class SonyBvmDSeries(Driver):
     def __init__(self, config: Dict[str, Any]):
         """
         Initializes a new instance of the Sony BVM D-series monitor driver.
-        :param config: The device configuration.
+        :param config:   The device configuration.
         """
         super().__init__(config, 0)
 
         validate_arg('tty' in self.config, 'Missing `tty` for Sony D-series monitor')
 
-        tty_path = os.path.realpath("/dev/{}".format(self.config['tty']))
+        tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config['tty']))
 
         self.tty = tty_path
         self.serial = Serial(tty_path, 38400, serial.EIGHTBITS, serial.PARITY_ODD, serial.STOPBITS_ONE)
@@ -30,6 +30,11 @@ class SonyBvmDSeries(Driver):
         """Cleans up an instance of the Sony BVM D-series monitor driver."""
         if isinstance(self.serial, Serial):
             self.serial.close()
+
+    @staticmethod
+    def register() -> DriverRegistration:
+        """Registers the Sony BVD-D series driver."""
+        return DriverRegistration('sony-bvm-d', 'Sony BVM-D series', lambda config: SonyBvmDSeries(config))
 
     def set_tie(self, input_channel: int, video_output_channel: int, audio_output_channel: int) -> None:
         """
