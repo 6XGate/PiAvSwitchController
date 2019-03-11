@@ -3,7 +3,7 @@ import os
 
 from serial import Serial
 
-from .. import Driver
+from .. import Driver, DriverRegistration
 from ..validation import validate_arg
 
 
@@ -24,7 +24,7 @@ class Extron(Driver):
         validate_arg('maxOutputs' in self.config, 'Missing `maxOutputs` for Extron switch')
         validate_arg('tty' in self.config, 'Missing `tty` for Extron switch')
 
-        tty_path = os.path.realpath("/dev/{}".format(self.config['tty']))
+        tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config['tty']))
 
         self.max_inputs = int(self.config['maxInputs'])
         self.max_outputs = int(self.config['maxOutputs'])
@@ -38,6 +38,11 @@ class Extron(Driver):
         """Cleans up an instance of the Extron driver."""
         if isinstance(self.serial, Serial):
             self.serial.close()
+
+    @staticmethod
+    def register() -> DriverRegistration:
+        """Registers the Extron SIS driver."""
+        return DriverRegistration('extron', 'Extron SIS', lambda config: Extron(config))
 
     def set_tie(self, input_channel: int, video_output_channel: int, audio_output_channel: int) -> None:
         """

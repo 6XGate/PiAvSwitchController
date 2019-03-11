@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import logging
 
 import dbus
 
@@ -8,44 +9,52 @@ from state import State
 __version__ = "0.5.0"
 
 
-def do_install() -> None:
+def _do_install() -> None:
     import installer
 
     installer.install()
 
 
-def do_setup() -> None:
+def _do_setup() -> None:
     import setup
 
     setup.perform()
 
 
-def run_app() -> int:
+def _run_app() -> int:
     import app
 
     return app.main()
 
 
-def main() -> int:
+def _main() -> int:
     with State():
+        logging.info("Starting A/V Switch Controller {}".format(__version__))
+
         # Perform any installation tasks that might be required.
         try:
-            do_install()
+            _do_install()
         except dbus.exceptions.DBusException as e:
-            print("Failed to install dependencies: {}".format(e.get_dbus_message()))
+            logging.error("Failed to install dependencies")
+            logging.exception(e)
             return 1
         except Exception as e:
-            print("Failed to install dependencies: {}".format(e))
+            logging.error("Failed to install dependencies")
+            logging.exception(e)
             return 1
 
         try:
-            do_setup()
+            _do_setup()
         except Exception as e:
-            print(e)
+            logging.exception(e)
             return 1
 
-        return run_app()
+        try:
+            return _run_app()
+        except Exception as e:
+            logging.exception(e)
+            return 1
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())

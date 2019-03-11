@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Callable
 
 
 class Driver:
@@ -32,3 +32,16 @@ class Driver:
     def power_off(self) -> None:
         """Powers off the switch or monitor."""
         pass
+
+
+class DriverRegistration:
+    def __init__(self, driver_id: str, title: str, ctor: Callable[[Dict[str, Any]], Driver]):
+        """
+        Defined basic information about a registered driver.
+        :param driver_id: The key used to identify the driver.
+        :param title:     The title of the driver.
+        :param ctor:      The constructor callable for the driver.
+        """
+        self.id = driver_id
+        self.title = title
+        self.ctor = ctor

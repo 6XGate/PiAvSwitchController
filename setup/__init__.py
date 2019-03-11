@@ -1,4 +1,5 @@
 import os
+import logging
 
 import xdg.BaseDirectory
 from xdg.DesktopEntry import DesktopEntry
@@ -12,6 +13,8 @@ from state import State
 #    # Planned features
 #    - Minor: Migrate of configuration data.
 #    - Major: Setup UI for switches, monitors, and devices.
+
+log = logging.getLogger(__name__)
 
 
 class _Setup:
@@ -51,7 +54,7 @@ def perform() -> None:
         # No need to perform any setup.
         return
 
-    print('Performing first time or update setup...')
+    log.info('Performing first time or update setup...')
 
     dummy_root = tk.Tk()
     dummy_root.withdraw()
