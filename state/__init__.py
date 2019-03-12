@@ -41,6 +41,7 @@ class State:
         self.my_title = "A/V Switch Controller"
         self.my_path = os.path.realpath(os.path.abspath(program.__file__))
         self.my_dir = os.path.dirname(self.my_path)
+        self.shutting_down = False
 
         # XDG paths, we get these without XDG to avoid the dependency until we install it.
         xdg_config_home = os.getenv("XDG_CONFIG_HOME", os.path.expandvars(os.path.join("$HOME", ".config")))
