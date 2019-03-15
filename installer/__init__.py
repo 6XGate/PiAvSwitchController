@@ -43,6 +43,7 @@ class _Installer:
 
     def check(self) -> bool:
         """Determines whether any dependencies are missing."""
+        log.info("Checking for missing dependencies...")
         for dependency in self.__dependencies:
             if not bool(self.__is_installed_method(dependency, "")):
                 self.__missing.append(dependency)
@@ -51,6 +52,7 @@ class _Installer:
 
     def install(self) -> None:
         """Installs any missing dependencies."""
+        log.info("Installing the following dependencies: {}".format(", ".join(self.__missing)))
         self.__install_method(0, self.__missing, "show-confirm-search,hide-finished", timeout=3600)
 
 
@@ -64,5 +66,4 @@ def install() -> None:
 
     installer = _Installer()
     if installer.check():
-        log.info("Installing required dependencies...")
         installer.install()
