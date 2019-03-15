@@ -6,7 +6,7 @@ import dbus
 
 from state import State
 
-__version__ = "0.6.1"
+__version__ = "0.6.2"
 
 
 def _do_install() -> None:
