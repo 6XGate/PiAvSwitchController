@@ -6,6 +6,7 @@ import tkinter as tk
 import numpy as np
 from PIL import Image, ImageEnhance, ImageTk
 
+from state import State
 from ..support.Device import devices, Device
 from ..support.Switch import switches
 
@@ -13,14 +14,10 @@ ButtonTarget = Union[None, Device, Image.Image]
 
 
 class Colors:
+    """The define color set for the user interface."""
     FRAME = "Black"
     BUTTON_NORMAL = "Dark Grey"
     BUTTON_SELECTED = "White"
-
-
-def shutdown_system():
-    # noinspection SpellCheckingInspection
-    os.system('sudo poweroff')
 
 
 class Main(tk.Tk):
@@ -70,7 +67,8 @@ class Main(tk.Tk):
         def power_off():
             for name, switch in switches.items():
                 switch.power_off()
-            shutdown_system()
+            State.current.shutting_down = True
+            self.destroy()
 
         # noinspection SpellCheckingInspection
         power_off_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), './res/poweroff.png'))

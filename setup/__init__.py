@@ -9,11 +9,6 @@ from tkinter import messagebox
 
 from state import State
 
-# TODO:
-#    # Planned features
-#    - Minor: Migrate of configuration data.
-#    - Major: Setup UI for switches, monitors, and devices.
-
 log = logging.getLogger(__name__)
 
 
@@ -23,10 +18,10 @@ class _Setup:
     # noinspection SpellCheckingInspection
     def __init__(self):
         """Initializes a new instance of the _Setup class."""
-        self.__user_auto_start_directory = os.path.join(xdg.BaseDirectory.xdg_config_home, 'autostart')
+        self.__user_auto_start_directory = os.path.join(xdg.BaseDirectory.xdg_config_home, "autostart")
         self.__auto_start_entry = os.path.join(self.__user_auto_start_directory,
                                                "{}.desktop".format(State.current.my_name))
-        self.__auto_start_directories = list(xdg.BaseDirectory.load_config_paths('autostart'))
+        self.__auto_start_directories = list(xdg.BaseDirectory.load_config_paths("autostart"))
 
     def has_startup(self) -> bool:
         """Determines whether an auto-start entry exists."""
@@ -42,9 +37,9 @@ class _Setup:
         """Creates the auto-start entry if the user wants one."""
         entry = DesktopEntry()
         entry.addGroup(DesktopEntry.defaultGroup)
-        entry.set('Type', 'Application')
-        entry.set('Name', State.current.my_name)
-        entry.set('Exec', "{0} \"{1}\"".format(State.current.python, State.current.my_path))
+        entry.set("Type", "Application")
+        entry.set("Name", State.current.my_name)
+        entry.set("Exec", "{0} \"{1}\"".format(State.current.python, State.current.my_path))
         entry.write(self.__auto_start_entry)
 
 
@@ -54,15 +49,18 @@ def perform() -> None:
         # No need to perform any setup.
         return
 
-    log.info('Performing first time or update setup...')
+    log.info("Performing first time or update setup...")
 
+    # We need a dummy root for message boxes.
     dummy_root = tk.Tk()
     dummy_root.withdraw()
 
     setup = _Setup()
     if not setup.has_startup():
+        log.info("No auto-start entry, ask the user if they want one.")
         if messagebox.askyesno(State.current.my_title,
-                               'Do you want to automatically start the A/V Switch Controller with your system?'):
+                               "Do you want to automatically start the A/V Switch Controller with your system?"):
+            log.info("Creating auto-start entry")
             setup.add_startup()
 
     dummy_root.destroy()
