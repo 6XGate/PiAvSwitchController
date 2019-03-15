@@ -12,11 +12,15 @@ import __main__ as program
 
 
 class _StandardOutputFilter(logging.Filter):
+    """Handles the filter for standard output filter."""
+
     def filter(self, record: logging.LogRecord):
         return super().filter(record) and record.levelno == logging.INFO
 
 
 class _StandardErrorFilter(logging.Filter):
+    """Handles the filter for standard error filter."""
+
     def filter(self, record: logging.LogRecord):
         return super().filter(record) and logging.WARN <= record.levelno
 

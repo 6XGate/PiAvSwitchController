@@ -28,6 +28,7 @@ def main() -> None:
     root.mainloop()
 
 
+# noinspection SpellCheckingInspection
 def shutdown() -> None:
     bus = dbus.SystemBus()
     kit = bus.get_object("org.freedesktop.login1", "/org/freedesktop/login1")
