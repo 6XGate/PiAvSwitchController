@@ -1,5 +1,7 @@
 from typing import Dict, Any
 import os
+import io
+import socket
 
 import serial
 
@@ -22,20 +24,25 @@ class Extron(Driver):
 
         validate_value("maxInputs" in self.config, "Missing `maxInputs` for Extron switch")
         validate_value("maxOutputs" in self.config, "Missing `maxOutputs` for Extron switch")
-        validate_value("tty" in self.config, "Missing `tty` for Extron switch")
-
-        tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config["tty"]))
+        validate_value("tty" in self.config or "host" in self.config, "Missing `tty` or `host` for Extron switch")
 
         self.max_inputs = int(self.config["maxInputs"])
         self.max_outputs = int(self.config["maxOutputs"])
-        self.serial = serial.Serial(tty_path, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
+        if "tty" in self.config:
+            tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config["tty"]))
+            self.host = None
+            self.serial = serial.Serial(tty_path, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
+        else:
+            self.host = self.config["host"]
+            self.serial = None
 
         if self.max_outputs > 1:
             self.capabilities = int(self.capabilities | Driver.HAS_MULTIPLE_OUTPUTS)
 
     def __del__(self):
         """Cleans up an instance of the Extron driver."""
-        self.serial.close()
+        if self.serial is not None:
+            self.serial.close()
 
     @staticmethod
     def register() -> DriverRegistration:
@@ -53,13 +60,25 @@ class Extron(Driver):
         validate_value(1 <= video_output_channel <= self.max_outputs, "Video output channel is out of range")
         validate_value(1 <= audio_output_channel <= self.max_outputs, "Audio output channel is out of range")
 
-        self.__send_command(Extron.__TIE_VIDEO.format(input_channel, video_output_channel))
-        self.__send_command(Extron.__TIE_AUDIO.format(input_channel, audio_output_channel))
+        command = "{0}\r\n{1}".format(
+            Extron.__TIE_VIDEO.format(input_channel, video_output_channel),
+            Extron.__TIE_AUDIO.format(input_channel, audio_output_channel)
+        )
+
+        self.__send_command(command)
 
     def __send_command(self, command: str) -> None:
         """
         Sends a command to the switch.
         :param command: The command to send.
         """
-        self.serial.write(command.encode())
-        self.serial.reset_input_buffer()
+        if self.serial is not None:
+            # Send the command to the serial connection.
+            self.serial.write(command.encode())
+            self.serial.reset_input_buffer()
+        else:
+            # Open a network connection and send the command.
+            with socket.create_connection((self.host, 23)) as connection:
+                with connection.makefile(mode='wb') as stream:  # type: io.BufferedWriter
+                    stream.write(command.encode())
+                    stream.flush()
