@@ -1,7 +1,7 @@
 from typing import Callable
 
 
-def validate_arg(expr: bool, msg: str) -> None:
+def validate_value(expr: bool, msg: str) -> None:
     """
     Validates an argument.
     :param expr: The validation expression, which must be true.

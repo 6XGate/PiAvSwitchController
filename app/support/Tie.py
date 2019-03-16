@@ -1,6 +1,6 @@
 from typing import Dict, Union
 
-from .validation import validate_arg
+from .validation import validate_value
 from . import Switch, Driver
 from .Switch import switches
 
@@ -21,23 +21,23 @@ class Tie:
         :param switch_id: The switch identifier for error reporting.
         :param config:    The tie configuration for the switch and a device.
         """
-        validate_arg(len(switch_id) > 0, 'Switch ID may not be empty')
-        validate_arg(switch_id in switches, "No such switch `{0}`".format(switch_id))
-        validate_arg('input' in config, "No input specified for `{0}`".format(switch_id))
+        validate_value(len(switch_id) > 0, 'Switch ID may not be empty')
+        validate_value(switch_id in switches, "No such switch `{0}`".format(switch_id))
+        validate_value('input' in config, "No input specified for `{0}`".format(switch_id))
 
         self.switch = switches[switch_id]  # type: Switch
         self.input = int(config['input'])
         self.output = {"video": 0, "audio": 0}  # type: TieOutput
         if self.switch.driver.capabilities & Driver.HAS_MULTIPLE_OUTPUTS:
-            validate_arg('output' in config, "No input specified for `{0}`".format(switch_id))
+            validate_value('output' in config, "No input specified for `{0}`".format(switch_id))
             output = config['output']  # type: TieChannel
             if isinstance(output, dict):
-                validate_arg(self.switch.driver.capabilities & Driver.CAN_DECOUPLE_AUDIO_OUTPUT,
+                validate_value(self.switch.driver.capabilities & Driver.CAN_DECOUPLE_AUDIO_OUTPUT,
                              "Separate audio and video given for `{0}`, which does not support decoupling".format(
                                  switch_id))
-                validate_arg('video' in output,
+                validate_value('video' in output,
                              "Missing `video` channel on decoupled output for `{0}`".format(switch_id))
-                validate_arg('audio' in output,
+                validate_value('audio' in output,
                              "Missing `audio` channel on decoupled output for `{0}`".format(switch_id))
                 self.output = output
             elif isinstance(output, int):

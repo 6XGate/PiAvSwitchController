@@ -2,9 +2,10 @@ from typing import Any, Dict
 import logging
 
 from .. import Driver, DriverRegistration
-from ..validation import validate_arg
+from ..validation import validate_value
 from .Extron import Extron
 from .SonyMonitor import SonyBvmDSeries
+from .TeslaSmart import TeslaSmart
 
 log = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ def register_drivers(*registry: DriverRegistration) -> Dict[str, DriverRegistrat
 drivers = register_drivers(
     Extron.register(),
     SonyBvmDSeries.register(),
+    TeslaSmart.register(),
 )
 
 
@@ -34,12 +36,12 @@ def load_driver(switch_id: str, config: Dict[str, Any]) -> Driver:
     """
 
     # Get the name of the driver.
-    validate_arg('driver' in config, "Driver not specified for `{0}`".format(switch_id))
+    validate_value('driver' in config, "Driver not specified for `{0}`".format(switch_id))
     name = str(config['driver'])
 
     # Now construct an instance of the driver for the switch.
-    validate_arg(name in drivers, "Driver `{0}` does not exist".format(name))
-    validate_arg('config' in config, "Switch configuration not specified for `{0}`".format(switch_id))
+    validate_value(name in drivers, "Driver `{0}` does not exist".format(name))
+    validate_value('config' in config, "Switch configuration not specified for `{0}`".format(switch_id))
 
     # Get some basic information to log out.
     title = str(config['title'] if 'title' in config else switch_id)

@@ -2,7 +2,7 @@ from typing import Dict, Any, Union, List
 
 from .Tie import Tie
 from .config import get_config_path
-from .validation import validate_arg
+from .validation import validate_value
 
 # A tie channel may be a single channel for input and output, or a video and audio channel for output.
 TieChannel = Union[int, Dict[str, int]]
@@ -18,8 +18,8 @@ class Device:
         :param device_index: The device index for error reporting.
         :param config:       The device configuration such as channel ties.
         """
-        validate_arg('ties' in config, "Configuration for `{0}` missing `ties`".format(device_index))
-        validate_arg(isinstance(config['ties'], dict), "Ties for `{0}` is not an object".format(device_index))
+        validate_value('ties' in config, "Configuration for `{0}` missing `ties`".format(device_index))
+        validate_value(isinstance(config['ties'], dict), "Ties for `{0}` is not an object".format(device_index))
 
         self.id = device_index
         self.title = str(config['title'] if 'title' in config else device_index)

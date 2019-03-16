@@ -1,10 +1,10 @@
 from typing import Dict, Any
 import os
 
-from serial import Serial
+import serial
 
 from .. import Driver, DriverRegistration
-from ..validation import validate_arg
+from ..validation import validate_value
 
 
 class Extron(Driver):
@@ -20,29 +20,27 @@ class Extron(Driver):
         """
         super().__init__(config, Driver.CAN_DECOUPLE_AUDIO_OUTPUT)
 
-        validate_arg('maxInputs' in self.config, 'Missing `maxInputs` for Extron switch')
-        validate_arg('maxOutputs' in self.config, 'Missing `maxOutputs` for Extron switch')
-        validate_arg('tty' in self.config, 'Missing `tty` for Extron switch')
+        validate_value("maxInputs" in self.config, "Missing `maxInputs` for Extron switch")
+        validate_value("maxOutputs" in self.config, "Missing `maxOutputs` for Extron switch")
+        validate_value("tty" in self.config, "Missing `tty` for Extron switch")
 
-        tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config['tty']))
+        tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config["tty"]))
 
-        self.max_inputs = int(self.config['maxInputs'])
-        self.max_outputs = int(self.config['maxOutputs'])
-        self.tty = tty_path
-        self.serial = Serial(tty_path)
+        self.max_inputs = int(self.config["maxInputs"])
+        self.max_outputs = int(self.config["maxOutputs"])
+        self.serial = serial.Serial(tty_path, 9600, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE)
 
         if self.max_outputs > 1:
             self.capabilities = int(self.capabilities | Driver.HAS_MULTIPLE_OUTPUTS)
 
     def __del__(self):
         """Cleans up an instance of the Extron driver."""
-        if isinstance(self.serial, Serial):
-            self.serial.close()
+        self.serial.close()
 
     @staticmethod
     def register() -> DriverRegistration:
         """Registers the Extron SIS driver."""
-        return DriverRegistration('extron', 'Extron SIS', lambda config: Extron(config))
+        return DriverRegistration("extron", "Extron SIS", lambda config: Extron(config))
 
     def set_tie(self, input_channel: int, video_output_channel: int, audio_output_channel: int) -> None:
         """
@@ -51,9 +49,9 @@ class Extron(Driver):
         :param video_output_channel: The output video channel of the tie.
         :param audio_output_channel: The output audio channel of the tie.
         """
-        validate_arg(1 <= input_channel <= self.max_inputs, 'Input channel is out of range')
-        validate_arg(1 <= video_output_channel <= self.max_outputs, 'Video output channel is out of range')
-        validate_arg(1 <= audio_output_channel <= self.max_outputs, 'Audio output channel is out of range')
+        validate_value(1 <= input_channel <= self.max_inputs, "Input channel is out of range")
+        validate_value(1 <= video_output_channel <= self.max_outputs, "Video output channel is out of range")
+        validate_value(1 <= audio_output_channel <= self.max_outputs, "Audio output channel is out of range")
 
         self.__send_command(Extron.__TIE_VIDEO.format(input_channel, video_output_channel))
         self.__send_command(Extron.__TIE_AUDIO.format(input_channel, audio_output_channel))
