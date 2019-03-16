@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from .validation import validate_arg
+from .validation import validate_value
 from .drivers import load_driver
 
 
@@ -13,8 +13,8 @@ class Switch:
         :param switch_id: The identifier used when referencing the switch.
         :param config:    The device configuration.
         """
-        validate_arg(len(switch_id) > 0, 'Switch ID cannot be empty')
-        validate_arg(isinstance(config['config'], dict),
+        validate_value(len(switch_id) > 0, 'Switch ID cannot be empty')
+        validate_value(isinstance(config['config'], dict),
                      "Configuration block for `{0}` is not an object".format(switch_id))
 
         self.id = switch_id
