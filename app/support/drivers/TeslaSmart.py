@@ -24,6 +24,7 @@ class TeslaSmart(Driver):
         validate_value("maxInputs" in self.config, "Missing `maxInputs` for Tesla-Smart switch")
         validate_value("tty" in self.config or "host" in self.config, "Missing `tty` or `host` for Extron switch")
 
+        self.max_inputs = int(self.config['maxInputs'])
         if "tty" in self.config:
             tty_path = os.path.realpath(os.path.join(os.path.sep, "dev", self.config["tty"]))
             self.host = None
@@ -31,8 +32,6 @@ class TeslaSmart(Driver):
         else:  # "host" in self.config
             self.host = self.config["host"]
             self.serial = None
-
-        self.max_inputs = int(self.config['maxInputs'])
 
     def __del__(self):
         """Cleans up an instance of the Tesla-Smart driver."""
