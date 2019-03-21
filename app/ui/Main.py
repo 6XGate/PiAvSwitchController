@@ -64,7 +64,7 @@ class Main(tk.Tk):
                 row = row + 1
                 column = 0
 
-        def power_off():
+        def power_off() -> None:
             for name, switch in switches.items():
                 switch.power_off()
             State.current.shutting_down = True
@@ -76,12 +76,6 @@ class Main(tk.Tk):
         button.grid(column=column, row=row, sticky=(tk.N, tk.W))
         button.grid_configure(padx=1, pady=1)
         self.__buttons.append(button)
-
-        def power_on():
-            for name, switch in switches.items():
-                switch.power_on()
-
-        self.after_idle(power_on)
 
     def __activate_button(self, command: Callable[[], None], button: tk.Button):
         selected = self.__selected
