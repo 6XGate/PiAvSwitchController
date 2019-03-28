@@ -79,6 +79,14 @@ class Extron(Driver):
         else:
             # Open a network connection and send the command.
             with socket.create_connection((self.host, 23)) as connection:
-                with connection.makefile(mode='wb') as stream:  # type: io.BufferedWriter
+                with connection.makefile(mode='rwb') as stream:  # type: io.BufferedWriter
+                    # Read the log-in message, there may be an empty line before it.
+                    while len(stream.readline().rstrip(b'\r\n')) == 0:
+                        pass
+                    stream.readline()
+                    # Write the command.
                     stream.write(command.encode())
                     stream.flush()
+                    # Read the video, then audio result.
+                    stream.readline()
+                    stream.readline()
