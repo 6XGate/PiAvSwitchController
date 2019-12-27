@@ -1,3 +1,5 @@
+**This project has been replaced by [BridgeCmdr](https://github.com/6XGate/bridgecmdr).**
+
 # AV Switch Control Board
 
 A control board for operating several AV switches at once when selecting several devices.
